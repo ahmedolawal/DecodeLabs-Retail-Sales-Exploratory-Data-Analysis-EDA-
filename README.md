@@ -166,7 +166,56 @@ The notebook currently reads the Excel file from a machine-specific Windows path
 6. Create a concise findings report: pair each chart with a clear observation, its business implication and a follow-up question.
 
 ## Project outcome
-This project demonstrates the core analytical discipline behind effective EDA: inspect the data, test its quality, understand distributions, explore relationships, investigate outliers, analyse trends and translate the results into business-facing observations.
+This project demonstrates the core analytical discipline behind effective EDA: 
+- inspect the data
+- test its quality
+- understand distributions
+- explore relationships
+- investigate outliers
+- analyse trends and
+- translate the results into business-facing observations.
 
-The central takeaway: meaningful analytics begins before the dashboard or model. It begins by asking better questions of the data and following the evidence wherever it leads.
+## The central takeaway: 
+Meaningful analytics begins before the dashboard or model. It begins by asking better questions of the data and following the evidence wherever it leads.
 Project notebook: DecodeLabs- Project 2 Python Final.ipynb
+
+
+# Exploratory Data Analysis
+
+## Importing the Required Libraries
+```
+import numpy as np
+import pandas as pd
+import seaborn as sns
+from matplotlib import pyplot as plt
+%matplotlib inline
+```
+
+```
+DecodeLabs_df = pd.read_excel(r"C:\Users\filepath.xlsx")
+DecodeLabs_df.head()
+```
+
+<img width="1037" height="198" alt="image" src="https://github.com/user-attachments/assets/a9536747-2cf5-4a15-b523-793ea277cac8" />
+
+# Checking for null values
+```
+DecodeLabs_df.isnull().sum()
+```
+<img width="213" height="221" alt="image" src="https://github.com/user-attachments/assets/944f6da0-93ca-4859-81bc-c460c86efb55" />
+
+# Checking the shape of the dataframe
+```
+DecodeLabs_df.shape
+```
+<img width="152" height="26" alt="image" src="https://github.com/user-attachments/assets/fadacac7-4889-49c0-9629-dbefab2f1207" />
+
+# checking for number of unique values in the target
+```
+DecodeLabs_df.nunique()
+```
+
+
+
+
+ 
