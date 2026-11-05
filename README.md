@@ -461,14 +461,15 @@ print('Number of Unique Products:', DecodeLabs_df['Product'].nunique())
 <img width="226" height="88" alt="image" src="https://github.com/user-attachments/assets/95d050e1-7e3b-4f12-ba76-7b80a7a6ee7f" />
 
 ## Rolling Revenue
-'''
+```
 DecodeLabs_df['TotalPrice'] = pd.to_numeric(DecodeLabs_df['TotalPrice'], errors='coerce').fillna(0)
 DecodeLabs_df = DecodeLabs_df.sort_values('Date').reset_index(drop=True)
 DecodeLabs_df['Cumulative_Revenue'] = DecodeLabs_df['TotalPrice'].cumsum()
 
 DecodeLabs_df[['Date', 'TotalPrice', 'Cumulative_Revenue']].head(10)
 ```
-<img width="321" height="239" alt="image" src="https://github.com/user-attachments/assets/2f910858-02c9-41ec-999e-c6f257e2eb16" />
+<img width="321" height="239" alt="image" src="https://github.com/user-attachments/assets/673b4158-2ec7-4d32-a0aa-7eba314ac8dd" />
+
 
 
 
