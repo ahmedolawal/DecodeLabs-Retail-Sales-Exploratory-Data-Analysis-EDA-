@@ -137,16 +137,6 @@ These are changes against the immediately preceding month, not year-on-year grow
 - NumPy — numerical operations
 - Matplotlib — charts and visual exploration
 - Seaborn — statistical visualisations
-Repository structure
-A simple suggested GitHub structure is:
-DecodeLabs-Retail-Sales-EDA/
-├── data/
-│   └── Decode_Lab.xlsx
-├── notebooks/
-│   └── DecodeLabs- Project 2 Python Final.ipynb
-├── README.md
-└── requirements.txt
-The notebook currently reads the Excel file from a machine-specific Windows path. For a portable repository, place the dataset in data/ and update the loading cell to use a relative path, 
 
 # Limitations and interpretation notes
 - The notebook's outputs describe the dataset supplied for this exercise; they should not be treated as independently verified company-wide financial results.
