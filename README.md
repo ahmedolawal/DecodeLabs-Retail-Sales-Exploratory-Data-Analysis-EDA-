@@ -470,6 +470,261 @@ DecodeLabs_df[['Date', 'TotalPrice', 'Cumulative_Revenue']].head(10)
 ```
 <img width="321" height="239" alt="image" src="https://github.com/user-attachments/assets/673b4158-2ec7-4d32-a0aa-7eba314ac8dd" />
 
+## Analysis of Change in Revenue over the period considered
+```
+monthly_revenue = DecodeLabs_df.groupby(
+    DecodeLabs_df['Date'].dt.to_period('M')
+)['TotalPrice'].sum()
+
+monthly_growth = monthly_revenue.pct_change() * 100
+
+print(monthly_growth)
+```
+<img width="265" height="428" alt="image" src="https://github.com/user-attachments/assets/08bcef06-d45a-4e4b-9ab3-6934cfca278f" />
+
+## Analysis of decodelabs Monthly Revenue Growth
+```
+monthly_revenue = DecodeLabs_df.groupby(
+    DecodeLabs_df['Date'].dt.to_period('M')
+)['TotalPrice'].sum()
+
+monthly_growth = monthly_revenue.pct_change() * 100
+
+fig, ax = plt.subplots(figsize=(12, 6))
+
+bars = ax.bar(
+    monthly_growth.index.astype(str),
+    monthly_growth,
+    color=['green' if x >= 0 else 'red' for x in monthly_growth.fillna(0)]
+)
+
+ax.bar_label(bars, fmt='%.1f%%', padding=3)
+
+ax.axhline(0, color='black', linewidth=0.8)
+ax.set_title('Monthly Revenue Growth (%)')
+ax.set_ylabel('Growth vs Previous Month (%)')
+
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+```
+<img width="890" height="440" alt="image" src="https://github.com/user-attachments/assets/4c224ac9-0446-441b-bbe3-9db09bfdaa27" />
+
+## Histogram - Distribution of the data in Field with Numeric Values
+```
+plt.figure(figsize=(12, 17))
+
+plt.subplot(5, 2, 1)
+sns.histplot(data=DecodeLabs_df, x='Date', kde=True)
+plt.title('Distribution of Date')
+
+plt.subplot(5, 2, 2)
+sns.histplot(data=DecodeLabs_df, x='Quantity', kde=True)
+plt.title('Distribution of Quantity')
+
+plt.subplot(5, 2, 3)
+sns.histplot(data=DecodeLabs_df, x='UnitPrice', kde=True)
+plt.title('Distribution of Unit Price')
+
+plt.subplot(5, 2, 4)
+sns.histplot(data=DecodeLabs_df, x='ItemsInCart', kde=True)
+plt.title('Distribution of Items in Cart')
+
+plt.subplot(5, 2, 5)
+sns.histplot(data=DecodeLabs_df, x='TotalPrice', kde=True)
+plt.title('Distribution of Total Price')
+
+plt.tight_layout()
+plt.show()
+```
+
+<img width="887" height="259" alt="image" src="https://github.com/user-attachments/assets/85f1e1f5-6ae8-4979-85cb-8a6368560fa0" />
+<img width="884" height="512" alt="image" src="https://github.com/user-attachments/assets/3ae18b2c-0b85-4d2c-9409-daf314cbcb83" />
+
+# Descriptive Statistics
+
+## Mean
+```
+DecodeLabs_df.select_dtypes(include='number').mean()
+```
+<img width="264" height="100" alt="image" src="https://github.com/user-attachments/assets/30cf62d7-f3d3-4583-8719-f523519b47ac" />
+
+## Median
+```
+DecodeLabs_df.select_dtypes(include='number').median()
+```
+<img width="231" height="93" alt="image" src="https://github.com/user-attachments/assets/cecc2d1c-6b09-4cfc-9e14-7f3a5bca1556" />
+
+## Count
+```
+DecodeLabs_df.count()
+```
+<img width="237" height="242" alt="image" src="https://github.com/user-attachments/assets/d1a09e08-bbf5-4c6a-84ed-77014e81a7ef" />
+
+## Minimum values
+```
+DecodeLabs_df.select_dtypes(include='number').min()
+```
+<img width="251" height="86" alt="image" src="https://github.com/user-attachments/assets/7e95a4ac-bc3b-45ee-9b7a-8cc466644b9c" />
+
+## Maximum values
+```
+DecodeLabs_df.select_dtypes(include='number').max()
+```
+<img width="264" height="101" alt="image" src="https://github.com/user-attachments/assets/5baf3e6b-8601-46a0-9e32-5401bbc22af2" />
+
+## Standard Deviation
+```
+DecodeLabs_df.select_dtypes(include='number').std()
+```
+<img width="305" height="100" alt="image" src="https://github.com/user-attachments/assets/968fee57-1029-401d-9c22-41d76002b41b" />
+
+## Variance
+```
+DecodeLabs_df.select_dtypes(include='number').var()
+```
+<img width="219" height="98" alt="image" src="https://github.com/user-attachments/assets/ad0d57b2-db74-454b-ab8b-dc251c038b77" />
+
+## Total Price Distribution Plot
+
+```
+# TotalPrice (must be numeric and clean i.e. free from invalid data)
+DecodeLabs_df['TotalPrice'] = pd.to_numeric(DecodeLabs_df['TotalPrice'], errors='coerce')
+plot_data = DecodeLabs_df['TotalPrice'].replace([float('inf'), float('-inf')], pd.NA).dropna()
+
+# Distribution plot
+plt.figure(figsize=(10, 6))
+sns.histplot(plot_data, kde=True, bins=30)
+plt.title('Distribution of Total Price')
+plt.xlabel('Total Price')
+plt.ylabel('Frequency')
+plt.show()
+```
+<img width="628" height="392" alt="image" src="https://github.com/user-attachments/assets/3a630bf0-7845-4600-9b0a-db49c310bc15" />
+
+## Total Price Density
+```
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+DecodeLabs_df['TotalPrice'] = pd.to_numeric(DecodeLabs_df['TotalPrice'], errors='coerce')
+plot_data = DecodeLabs_df['TotalPrice'].replace([float('inf'), float('-inf')], pd.NA).dropna()
+
+plt.figure(figsize=(10, 6))
+sns.kdeplot(x=plot_data, fill=True)
+plt.title('Density of Total Price')
+plt.xlabel('Total Price')
+plt.ylabel('Density')
+plt.show()
+```
+<img width="647" height="401" alt="image" src="https://github.com/user-attachments/assets/29201f6f-7766-459c-9e28-ebbd0de989fa" />
+
+## Frequency Counts
+```
+DecodeLabs_df['Product'].value_counts()
+```
+<img width="253" height="143" alt="image" src="https://github.com/user-attachments/assets/77fad86f-e7a7-45b5-94cd-8ee3b822dd75" />
+
+## Percentage Distribution
+```
+DecodeLabs_df['Product'].value_counts(normalize=True) * 100
+```
+<img width="252" height="139" alt="image" src="https://github.com/user-attachments/assets/da8d3dad-8875-46b6-94db-9efa4d13f877" />
+
+## Number of unique products
+```
+DecodeLabs_df['Product'].nunique()
+```
+<img width="194" height="32" alt="image" src="https://github.com/user-attachments/assets/af7caba5-22c3-441f-b366-f0988468b843" />
+
+## Bivariate Analysis – Identifying Relationships
+
+## Categorical vs categorical variables
+
+### Using cross-tabulation to investigate relationships between Categories
+
+#### Analysis of Product by Order Status
+
+```
+pd.crosstab(
+    DecodeLabs_df['Product'],
+    DecodeLabs_df['OrderStatus']
+)
+```
+
+<img width="367" height="188" alt="image" src="https://github.com/user-attachments/assets/f537ec5c-d23e-4105-acd0-9d9bc7b59617" />
+
+### Analysis of Product by Order Status in Percentage
+```
+pd.crosstab(
+    DecodeLabs_df['Product'],
+    DecodeLabs_df['OrderStatus'],
+    normalize='index'
+).mul(100).round(1)
+```
+
+<img width="371" height="177" alt="image" src="https://github.com/user-attachments/assets/fe38203b-014d-4465-8eca-8cf12c79d498" />
+
+### Analysis of Product by Coupon Code
+```
+pd.crosstab(
+    DecodeLabs_df['Product'],
+    DecodeLabs_df['CouponCode']
+)
+```
+<img width="281" height="189" alt="image" src="https://github.com/user-attachments/assets/831d5bd8-3c80-4ca7-af12-d871f22ec93e" />
+
+### Analysis of Product by Referral Source
+
+```
+pd.crosstab(
+    DecodeLabs_df['Product'],
+    DecodeLabs_df['ReferralSource']
+)
+```
+<img width="354" height="194" alt="image" src="https://github.com/user-attachments/assets/ec52f8a3-3438-4702-b072-c7d9342e0433" />
+
+### Analysis of Product by Referral Source in Percentage
+```
+pd.crosstab(
+    DecodeLabs_df['Product'],
+    DecodeLabs_df['ReferralSource'],
+    normalize='index'
+).mul(100).round(1)
+```
+<img width="384" height="187" alt="image" src="https://github.com/user-attachments/assets/74c2b953-4438-4966-b7d9-5620ecb3b72f" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
