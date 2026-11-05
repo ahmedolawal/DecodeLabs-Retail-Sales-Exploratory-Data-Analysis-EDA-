@@ -695,6 +695,108 @@ pd.crosstab(
 ```
 <img width="384" height="187" alt="image" src="https://github.com/user-attachments/assets/74c2b953-4438-4966-b7d9-5620ecb3b72f" />
 
+# Multivariate analysis – understanding multiple variables
+### Multivariate analysis examines three or more variables simultaneously.
+
+## Pair Plot
+```
+sns.pairplot(
+    DecodeLabs_df,
+    vars=['Quantity', 'UnitPrice', 'TotalPrice'],
+    diag_kind='hist'
+)
+
+plt.show()
+```
+<img width="548" height="545" alt="image" src="https://github.com/user-attachments/assets/280f1838-1096-464b-a32c-abd28da75336" />
+
+This helps you identify:
+- Positive relationships.
+- Negative relationships.
+- Clusters.
+- Potential outliers.
+- Distribution patterns.
+
+
+## Identifying Outliers - Outlier detection
+Outliers are observations that are unusually high or low compared with the rest of the dataset.
+
+They may indicate unusual customer behaviour, data-entry errors or exceptional transactions.
+
+## Boxplot - Outlier Detection in Field / Column Values
+
+```
+for column in ['Date', 'Product', 'Quantity', 'UnitPrice',
+       'PaymentMethod', 'OrderStatus',
+       'ItemsInCart', 'CouponCode', 'ReferralSource', 'TotalPrice']:
+    plt.figure(figsize=(15, 4))
+    sns.boxplot(data=DecodeLabs_df, x=column)
+    plt.title(column)
+    plt.show()
+```
+
+<img width="884" height="287" alt="image" src="https://github.com/user-attachments/assets/95a2141e-8c7b-4250-9526-77234ddc5968" />
+<img width="884" height="282" alt="image" src="https://github.com/user-attachments/assets/2e5df348-1a50-44df-93aa-79d658135895" />
+<img width="882" height="278" alt="image" src="https://github.com/user-attachments/assets/7fd39c48-916e-464a-ab27-50bc8a327c06" />
+<img width="881" height="282" alt="image" src="https://github.com/user-attachments/assets/655b0833-3b2b-4011-814f-edf52aebd4e8" />
+<img width="881" height="277" alt="image" src="https://github.com/user-attachments/assets/ddd6a81f-9c6b-491c-a37b-59a5dc3c144d" />
+<img width="878" height="279" alt="image" src="https://github.com/user-attachments/assets/ec3d089f-0a50-4a9a-bf1b-8d777a87fc5f" />
+<img width="881" height="286" alt="image" src="https://github.com/user-attachments/assets/509938e4-8fbe-4ab3-bd5b-b0f14bfa4237" />
+<img width="878" height="281" alt="image" src="https://github.com/user-attachments/assets/41e77f79-c503-4480-a4ab-3af1b79bb960" />
+<img width="881" height="282" alt="image" src="https://github.com/user-attachments/assets/0bcb5bec-a593-4e8b-acb3-c880155d7f7d" />
+<img width="879" height="281" alt="image" src="https://github.com/user-attachments/assets/88f6a5d1-bfeb-4d5a-b516-4f9da599aea1" />
+
+
+## Group By Analysis – Extracting Business Insights
+
+### Product Performance Analysis
+```
+product_analysis = DecodeLabs_df.groupby('Product').agg(
+    Total_Quantity=('Quantity', 'sum'),
+    Average_Quantity=('Quantity', 'mean'),
+    Total_Revenue=('TotalPrice', 'sum'),
+    Average_Revenue=('TotalPrice', 'mean'),
+    Average_UnitPrice=('UnitPrice', 'mean'),
+    Transaction_Count=('Product', 'count')
+).sort_values(
+    by='Total_Revenue',
+    ascending=False
+)
+
+print(product_analysis)
+```
+<img width="473" height="290" alt="image" src="https://github.com/user-attachments/assets/222744ad-f137-4031-ad9c-5a0e39e9bf28" />
+
+## B. Interquartile Range (IQR) - Outlier Detection
+
+```
+Q1 = DecodeLabs_df['TotalPrice'].quantile(0.25)
+Q3 = DecodeLabs_df['TotalPrice'].quantile(0.75)
+
+IQR = Q3 - Q1
+
+lower_limit = Q1 - 1.5 * IQR
+upper_limit = Q3 + 1.5 * IQR
+
+outliers = DecodeLabs_df[
+    (DecodeLabs_df['TotalPrice'] < lower_limit) |
+    (DecodeLabs_df['TotalPrice'] > upper_limit)
+]
+
+print('Number of outliers:', len(outliers))
+print(outliers)
+```
+<img width="546" height="433" alt="image" src="https://github.com/user-attachments/assets/957a932a-20fd-4eb7-bb14-7b96f4eb4247" />
+
+
+
+
+
+
+
+
+
+
 
 
 
