@@ -214,6 +214,268 @@ DecodeLabs_df.shape
 ```
 DecodeLabs_df.nunique()
 ```
+<img width="188" height="229" alt="image" src="https://github.com/user-attachments/assets/bbddeb98-92d8-4235-90dd-e99f8a9a25a7" />
+
+# Count duplicate rows
+```
+print("Number of duplicate rows:", DecodeLabs_df.duplicated().sum())
+```
+<img width="219" height="28" alt="image" src="https://github.com/user-attachments/assets/ffaca8cd-5ffc-4b81-a36c-1ccf51fa4a57" />
+
+# checking for the stastistics
+```
+DecodeLabs_df.describe()
+```
+<img width="447" height="195" alt="image" src="https://github.com/user-attachments/assets/c1857f5d-246b-4d9f-a730-d6d841015261" />
+
+```
+numeric_df = DecodeLabs_df.select_dtypes(include='number')
+numeric_df.agg(['mean', 'median', 'std', 'min', 'max'])
+```
+<img width="388" height="123" alt="image" src="https://github.com/user-attachments/assets/83dff35c-7635-4a08-9fe4-337bb8148e56" />
+
+
+```
+numeric_df = DecodeLabs_df.select_dtypes(include='number')
+numeric_df.agg(['mean', 'median', 'std', 'min', 'max'])
+```
+<img width="317" height="127" alt="image" src="https://github.com/user-attachments/assets/184e872f-8a18-46dc-b2d8-ea375b166f1b" />
+
+### Analysis of Data Fields
+```
+DecodeLabs_df.dtypes
+```
+<img width="226" height="215" alt="image" src="https://github.com/user-attachments/assets/5953cd5f-2a1f-44b0-8dde-956413d8246a" />
+
+```
+DecodeLabs_df.columns
+```
+<img width="448" height="73" alt="image" src="https://github.com/user-attachments/assets/22b51ee6-da1a-4698-84fe-79ae9ea7bd23" />
+
+## Correlation heatmap
+#### This helps identify variables that move together.
+
+```
+# Keep only numeric columns
+numeric_df = DecodeLabs_df.select_dtypes(include=['int64', 'float64'])
+
+# Correlation matrix
+corr_matrix = numeric_df.corr(method='pearson')
+
+# Plot heatmap
+plt.figure(figsize=(14,10))
+
+sns.heatmap(
+    corr_matrix,
+    annot=True,
+    fmt='.2f',
+    cmap='RdYlGn',
+    center=0,
+    linewidths=0.5,
+    annot_kws={'size':8}
+)
+
+plt.title('Correlation Matrix', fontsize=16, fontweight='bold')
+plt.xticks(rotation=45, ha='right')
+plt.yticks(rotation=0)
+
+plt.tight_layout()
+plt.show()
+```
+
+<img width="550" height="436" alt="image" src="https://github.com/user-attachments/assets/1c9aad20-eff7-4e88-bb72-b22c5efecd7a" />
+
+# Trend analysis of Decodelabs Revenue
+```
+daily_sales = DecodeLabs_df.groupby(
+    DecodeLabs_df['Date'].dt.date
+)['TotalPrice'].sum()
+
+daily_sales.plot(figsize=(14, 6))
+
+plt.title('Daily Sales Trend')
+plt.xlabel('Date')
+plt.ylabel('Sales Revenue')
+plt.show()
+```
+<img width="872" height="401" alt="image" src="https://github.com/user-attachments/assets/9b1f660c-1c8f-4d6d-9555-02951e7b5aff" />
+
+### Decodelabs Monthly Revenue Trend
+```
+monthly_revenue = DecodeLabs_df.groupby(
+    DecodeLabs_df['Date'].dt.to_period('M')
+)['TotalPrice'].sum()
+
+monthly_revenue.plot(
+    figsize=(14, 6),
+    marker='o'
+)
+
+plt.title('Monthly Revenue Trend')
+plt.xlabel('Month')
+plt.ylabel('Total Revenue')
+plt.xticks(rotation=45)
+plt.show()
+```
+<img width="879" height="431" alt="image" src="https://github.com/user-attachments/assets/9d5381c7-68ff-461e-99dc-0d6166f4b857" />
+
+## Analysis of Count of Products
+```
+plt.figure(figsize=(16,6))
+
+ax = sns.countplot(
+    data=DecodeLabs_df,
+    x='Product',
+    color='steelblue'
+)
+
+ax.bar_label(ax.containers[0])
+
+plt.title('Count of Products')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+```
+<img width="991" height="365" alt="image" src="https://github.com/user-attachments/assets/90f67a74-69cb-4712-a7de-6ddd334a5fb6" />
+
+## Analysis of Monthly Quantity of Product Sold
+```
+monthly_quantity = DecodeLabs_df.groupby(
+    DecodeLabs_df['Date'].dt.month
+)['Quantity'].sum()
+
+ax = monthly_quantity.plot(
+    kind='bar',
+    figsize=(12, 5),
+    color='steelblue'
+)
+
+# Add data labels
+for container in ax.containers:
+    ax.bar_label(container, fmt='%.0f', padding=3)
+
+plt.title('Monthly Quantity Sold')
+plt.xlabel('Month')
+plt.ylabel('Quantity Sold')
+plt.xticks(rotation=0)
+plt.tight_layout()
+plt.show()
+```
+<img width="886" height="349" alt="image" src="https://github.com/user-attachments/assets/b78e2028-c43e-434c-8d25-061c0fa521e1" />
+
+### Average Revenue by Product
+```
+plt.figure(figsize=(14, 6))
+
+ax = sns.barplot(
+    data=DecodeLabs_df,
+    x='Product',
+    y='TotalPrice',
+    estimator='mean',
+    errorbar=None
+)
+
+ax.bar_label(ax.containers[0], fmt='%.0f')
+
+plt.title('Average Revenue by Product')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+```
+<img width="989" height="413" alt="image" src="https://github.com/user-attachments/assets/c594e192-2d8d-4ffc-9894-47d8c8607f60" />
+
+# Analysis of Revenue by Product
+```
+DecodeLabs_df.groupby('Product')['TotalPrice'].sum().sort_values(
+    ascending=False
+)
+```
+<img width="249" height="128" alt="image" src="https://github.com/user-attachments/assets/eeb10ec1-c223-47ec-8899-b425ef6578c8" />
+
+```
+pd.pivot_table(
+    DecodeLabs_df,
+    index='Product',
+    values=['Quantity', 'TotalPrice'],
+    aggfunc={
+        'Quantity': 'sum',
+        'TotalPrice': 'sum'
+    }
+)
+```
+<img width="193" height="188" alt="image" src="https://github.com/user-attachments/assets/88915adf-c7f0-4f71-b4ab-0bad7e13bf28" />
+
+## Summary of Revenue by Product
+```
+product_revenue = DecodeLabs_df.groupby('Product')['TotalPrice'].sum().sort_values(
+    ascending=False
+)
+
+ax = product_revenue.plot(
+    kind='bar',
+    figsize=(14,6),
+    color='teal'
+)
+
+ax.bar_label(ax.containers[0], fmt='£{:,.0f}')
+
+plt.title('Revenue by Product')
+plt.xlabel('Product')
+plt.ylabel('Revenue (£)')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+```
+<img width="988" height="405" alt="image" src="https://github.com/user-attachments/assets/002c8edf-686b-40d1-a0c3-a38a7c87efe8" />
+
+## Product Statistics
+```
+product_analysis = DecodeLabs_df.groupby('Product').agg(
+    Total_Quantity=('Quantity', 'sum'),
+    Average_Quantity=('Quantity', 'mean'),
+    Total_Revenue=('TotalPrice', 'sum'),
+    Average_Revenue=('TotalPrice', 'mean'),
+    Average_UnitPrice=('UnitPrice', 'mean'),
+    Transaction_Count=('Product', 'count')
+).sort_values(
+    by='Total_Revenue',
+    ascending=False
+)
+
+print(product_analysis)
+```
+<img width="452" height="271" alt="image" src="https://github.com/user-attachments/assets/eca717dd-ed7c-4fce-bb36-5ec55282b512" />
+
+# Overall Business Performance
+```
+print('Total Revenue:', DecodeLabs_df['TotalPrice'].sum())
+
+print('Average Revenue:', DecodeLabs_df['TotalPrice'].mean())
+
+print('Total Quantity Sold:', DecodeLabs_df['Quantity'].sum())
+
+print('Total Transactions:', len(DecodeLabs_df))
+
+print('Number of Unique Products:', DecodeLabs_df['Product'].nunique())
+```
+<img width="226" height="88" alt="image" src="https://github.com/user-attachments/assets/95d050e1-7e3b-4f12-ba76-7b80a7a6ee7f" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
